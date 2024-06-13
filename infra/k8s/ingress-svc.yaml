@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-svc
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+  - host: tickets.online
+    http:
+      paths:
+      - pathType: ImplementationSpecific
+        path: "/api/users/?(.*)"
+        backend:
+          service:
+            name: auth-svc
+            port: 
+              number: 3001
+      - pathType: ImplementationSpecific
+        path: "/api/tickets/?(.*)"
+        backend:
+          service:
+            name: tickets-svc
+            port: 
+              number: 3002
+      - pathType: ImplementationSpecific
+        path: "/api/orders/?(.*)"
+        backend:
+          service:
+            name: orders-svc
+            port: 
+              number: 3004
+      - pathType: ImplementationSpecific
+        path: "/?(.*)"
+        backend:
+          service:
+            name: client-svc
+            port: 
+              number: 3000
